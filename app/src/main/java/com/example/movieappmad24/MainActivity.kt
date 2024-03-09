@@ -3,6 +3,8 @@ package com.example.movieappmad24
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
@@ -61,6 +65,9 @@ import com.example.movieappmad24.ui.theme.Purple40
 import com.example.movieappmad24.ui.theme.Purple80
 import com.example.movieappmad24.ui.theme.PurpleGrey40
 import com.example.movieappmad24.ui.theme.PurpleGrey80
+import coil.compose.rememberImagePainter
+import com.example.movieappmad24.ui.theme.Pink40
+import com.example.movieappmad24.ui.theme.Pink80
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -95,8 +102,8 @@ fun TopAppBar() {
     CenterAlignedTopAppBar(
         title = { Text("Movie App") },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Purple80, // Set the background color
-            titleContentColor = Purple40 // Set the title text color here
+            containerColor = Purple80, // Sets the background color
+            titleContentColor = Purple40 // Sets the title text color here
         )
     )
 }
@@ -145,41 +152,35 @@ fun MovieList(movies: List<Movie> = getMovies()){
 }
 
 @Composable
-fun MovieRow(movie: Movie){
-    var showDetails by remember {
-        mutableStateOf(false)
-    }
+fun MovieRow(movie: Movie) {
+    var showDetails by remember { mutableStateOf(false) }
 
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(5.dp),
-        shape = ShapeDefaults.Large,
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .animateContentSize(), // This adds an animation effect to size changes
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                // Changes Color of the Box
+                .background(PurpleGrey80),
+        ) {
             Box(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.movie_image),
+                // Changed from Image to AsyncImage
+                AsyncImage(
+                    model = movie.images.first(),
+                    contentDescription = "Movie image",
+                    modifier = Modifier.fillMaxWidth(),
                     contentScale = ContentScale.Crop,
-                    contentDescription = "placeholder image")
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    contentAlignment = Alignment.TopEnd
-                ){
-                    Icon(
-                        tint = MaterialTheme.colorScheme.secondary,
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Add to favorites")
-                }
+                )
             }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -188,13 +189,33 @@ fun MovieRow(movie: Movie){
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = movie.title)
-                Icon(modifier = Modifier
-                    .clickable {
-                        showDetails = !showDetails
-                    },
-                    imageVector =
-                    if (showDetails) Icons.Filled.KeyboardArrowDown
-                    else Icons.Default.KeyboardArrowUp, contentDescription = "show more")
+                Icon(
+                    imageVector = if (showDetails) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "Show or hide details",
+                    modifier = Modifier.clickable { showDetails = !showDetails }
+                )
+            }
+
+            // AnimatedVisibility toggles the visibility of its content with an animation
+            AnimatedVisibility(visible = showDetails) {
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .background(PurpleGrey80),
+                ) {
+                    Text("Director: ${movie.director}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Released: ${movie.year}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Genre: ${movie.genre}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Actors: ${movie.actors}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Rating: ${movie.rating}", style = MaterialTheme.typography.bodyMedium)
+                    // Divider for better User Experience/Readability
+                    Divider(
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+                    )
+                    Text("Plot: ${movie.plot}", style = MaterialTheme.typography.bodyMedium)
+                    // Add more details if wanted/needed
+                }
             }
         }
     }
