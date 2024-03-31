@@ -6,25 +6,38 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.screens.DetailScreen
 import com.example.movieappmad24.screens.HomeScreen
+import com.example.movieappmad24.screens.WatchlistScreen
+
 
 @Composable
-fun Navigation() {
-    val navController = rememberNavController() // create a NavController instance
+fun Navigation(movies: List<Movie>) {
+    val navController = rememberNavController()
 
-    NavHost(navController = navController, // pass the NavController to NavHost
-        startDestination = "homescreen") {  // pass a start destination
-
-        composable(route = "homescreen"){   // route with name "homescreen" navigates to HomeScreen composable
+    NavHost(
+        navController = navController,
+        startDestination = Screen.HomeScreen.route
+    ) {
+        composable(Screen.HomeScreen.route) {
             HomeScreen(navController = navController)
         }
-
         composable(
-            route = "detailscreen/{movieId}",
-            arguments = listOf(navArgument(name = "movieId") {type = NavType.StringType})
+            route = Screen.DetailScreen.route,
+            arguments = listOf(navArgument(name = "movieId") { type = NavType.StringType })
         ) { backStackEntry ->
-            DetailScreen(movieId = backStackEntry.arguments?.getString("movieId"))
+            val movieId = backStackEntry.arguments?.getString("movieId")
+            movieId?.let { id ->
+                val movie = movies.find { it.id == id }
+                movie?.let {
+                    DetailScreen(navController = navController, movieId = id)
+                }
+            }
+        }
+        composable(Screen.WatchlistScreen.route)
+        {
+            WatchlistScreen( navController = navController)
         }
     }
 }
