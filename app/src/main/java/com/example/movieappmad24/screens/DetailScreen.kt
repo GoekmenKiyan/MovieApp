@@ -31,29 +31,34 @@ import com.example.movieappmad24.widgets.SimpleTopAppBar
 fun DetailScreen(navController: NavController, movieId: String) {
     val movie = getMovies().find { it.id == movieId }
 
+    // Error Message
     if (movie == null) {
-        Text("Movie not found")
+        Text("Movie not available")
         return
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        // Display the TopBar
         topBar = {
             SimpleTopAppBar(navController = navController, title = movie.title, backButton = true)
         },
+        // Content of the Detail Section
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
                 MovieRow(
                     movie = movie,
-                    onItemClick = {},
+                    onItemClick = { /* insert EventHandler */ },
                     navController = navController
                 )
+                // Horizontal Row of Images
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(start = 8.dp, top = 6.dp, bottom = 6.dp)
                 ) {
+                    // Loop through all images and display ech one in a single card
                     items(movie.images) { image ->
-                        MoviePicture(resourceLink = image, title = movie.title)
+                        MoviePictureDisplay(resourceLink = image, title = movie.title)
                     }
                 }
 
@@ -66,12 +71,14 @@ fun DetailScreen(navController: NavController, movieId: String) {
 
 
 @Composable
-fun MoviePicture(resourceLink: String, title: String) {
+fun MoviePictureDisplay(resourceLink: String, title: String) {
+    // Using Card to display the images
     Card(
         shape = RoundedCornerShape(size = 20.dp),
         modifier = Modifier
             .padding(all = 15.dp)
     ) {
+        // Async like in the last exercise
         AsyncImage(
             model = resourceLink,
             contentScale = ContentScale.Crop,

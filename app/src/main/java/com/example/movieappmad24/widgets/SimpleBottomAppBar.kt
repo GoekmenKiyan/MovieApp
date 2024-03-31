@@ -21,15 +21,18 @@ import com.example.movieappmad24.ui.theme.PurpleGrey80
 
 @Composable
 fun SimpleBottomAppBar(navController: NavController) {
+    // Check current "BackStackEntry" to see which route is active right now
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
         containerColor = PurpleGrey80
     ) {
+        // HomeScreen Navigation
         NavigationBarItem(
             label = { Text("Home") },
             selected = currentRoute == Screen.HomeScreen.route,
+            // EventHandler to navigate to HomeScreen
             onClick = {
                 navController.navigate(Screen.HomeScreen.route) {
                     popUpTo(navController.graph.startDestinationId)
@@ -45,9 +48,11 @@ fun SimpleBottomAppBar(navController: NavController) {
                 )
             }
         )
+        // Watchlist Screen Navigation
         NavigationBarItem(
             label = { Text("Watchlist") },
             selected = currentRoute == Screen.WatchlistScreen.route,
+            // EventHandler to navigate to Watchlist-Screen
             onClick = {
                 navController.navigate(Screen.WatchlistScreen.route) {
                     popUpTo(navController.graph.startDestinationId)

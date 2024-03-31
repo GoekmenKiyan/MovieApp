@@ -20,7 +20,7 @@ fun WatchlistScreen(navController: NavController) {
     WatchlistAppScaffold(navController = navController)
 }
 
-
+// Scaffold -> Sets up app bar structure for the Watchlist-Section
 @Composable
 fun WatchlistAppScaffold(navController: NavController) {
     MovieAppMAD24Theme {
@@ -28,13 +28,13 @@ fun WatchlistAppScaffold(navController: NavController) {
             topBar = { SimpleTopAppBar(navController,"Watchlist", false) },
             bottomBar = { SimpleBottomAppBar(navController) }
         ) { innerPadding ->
-            MovieWatchList(navController = navController, modifier = Modifier.padding(innerPadding))
+            MovieWatchList(navController = navController, modifier = Modifier.padding(innerPadding)) // Movies will be displayed here
         }
     }
 }
 
 
-
+// Displaying a list of movies that are in the saved Watchlist (will be working correctly in the next exercise)
 @Composable
 fun MovieWatchList(navController: NavController, modifier: Modifier = Modifier) {
     val movies = getMovies().subList(0,4)

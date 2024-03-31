@@ -42,6 +42,7 @@ fun AppScaffold(navController: NavController) {
 fun MovieList(navController: NavController, modifier: Modifier = Modifier) {
     val movies = getMovies()
 
+    // Settings for displaying the movies with click-EventHandlers
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -58,8 +59,9 @@ fun MovieList(navController: NavController, modifier: Modifier = Modifier) {
     }
 }
 
+// ----- TESTING AREA ----- //
 
-
+// Preview for coding purposes
 @Preview
 @Composable
 fun MovieAppPreview() {

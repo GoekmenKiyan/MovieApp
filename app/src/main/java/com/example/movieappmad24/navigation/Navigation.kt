@@ -17,12 +17,14 @@ fun Navigation(movies: List<Movie>) {
     val navController = rememberNavController()
 
     NavHost(
+        // NavController -> to handle all navigation actions
         navController = navController,
         startDestination = Screen.HomeScreen.route
     ) {
         composable(Screen.HomeScreen.route) {
             HomeScreen(navController = navController)
         }
+        // Defining the "Movie details" screen
         composable(
             route = Screen.DetailScreen.route,
             arguments = listOf(navArgument(name = "movieId") { type = NavType.StringType })
@@ -35,6 +37,7 @@ fun Navigation(movies: List<Movie>) {
                 }
             }
         }
+        // Defining the "Watchlist" screen
         composable(Screen.WatchlistScreen.route)
         {
             WatchlistScreen( navController = navController)

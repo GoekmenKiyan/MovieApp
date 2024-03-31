@@ -37,6 +37,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
+import com.example.movieappmad24.ui.theme.Pink40
+import com.example.movieappmad24.ui.theme.Pink80
 import com.example.movieappmad24.ui.theme.Purple40
 import com.example.movieappmad24.ui.theme.PurpleGrey80
 
@@ -69,7 +71,9 @@ fun MovieRow(
     onItemClick: (String) -> Unit,
     navController: NavController
 ) {
+    // Check if Movie got favored
     var isFavorite by remember { mutableStateOf(false) }
+    // Check if Movie Details got shown
     var showArrow by remember { mutableStateOf(false) }
 
     MovieAppMAD24Theme {
@@ -98,16 +102,19 @@ fun MovieCardHeader(
     Box(modifier = Modifier
         .fillMaxWidth()
     ) {
+        // Card to show first Image of Movie
         Card(
             modifier = Modifier
                 .align(Alignment.CenterStart)
+                // EventHandler -> what happens after clicking on the Card/Image
                 .clickable {
                     onItemClick(movie.id)
                     navController.navigate("detailscreen/${movie.id}")
                 },
-            shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp), // Rounded Corners
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Shadows Card/Image
         ) {
+            // Loading and Displaying Images
             AsyncImage(
                 model = movie.images.firstOrNull() ?: "",
                 contentDescription = movie.title,
@@ -117,6 +124,7 @@ fun MovieCardHeader(
 
             )
         }
+        // Toggle Button to favor Movies
         IconToggleButton(
             checked = isFavorite,
             onCheckedChange = { onFavoriteClick() },
@@ -124,8 +132,9 @@ fun MovieCardHeader(
                 .align(Alignment.TopEnd)
                 .padding(8.dp)
         ) {
+            // Displaying filled/outlined Hearth Icon for favored Movies
             Icon(
-                tint = Color.Red,
+                tint = Pink80,
                 imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
                 contentDescription = null
             )
@@ -149,6 +158,7 @@ fun MovieTitleBar(movie: Movie, showArrow: Boolean, onArrowClick: () -> Unit) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Display Movie Title
         Text(
             text = movie.title,
             modifier = Modifier
@@ -156,7 +166,9 @@ fun MovieTitleBar(movie: Movie, showArrow: Boolean, onArrowClick: () -> Unit) {
                 .padding(end = 8.dp),
             color = Color.Black // Color of the Movie Name
         )
+        // Button to expand the Movie Details
         IconButton(onClick = { onArrowClick() }) {
+            // Change direction of Rollback Icon
             Icon(
                 imageVector = if (showArrow) Icons.Filled.KeyboardArrowUp else Icons.Default.KeyboardArrowUp,
                 contentDescription = "Expand",
