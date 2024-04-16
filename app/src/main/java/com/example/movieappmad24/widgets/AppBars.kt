@@ -13,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.movieappmad24.ui.theme.Pink80
+import com.example.movieappmad24.ui.theme.PurpleGrey80
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +25,8 @@ fun SimpleTopAppBar(
     CenterAlignedTopAppBar(
         title = { Text(title) },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            //containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = PurpleGrey80,
             titleContentColor = MaterialTheme.colorScheme.primary
         ),
         navigationIcon = navigationIcons
