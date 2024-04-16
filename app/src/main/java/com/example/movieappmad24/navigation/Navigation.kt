@@ -6,41 +6,30 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.screens.DetailScreen
 import com.example.movieappmad24.screens.HomeScreen
 import com.example.movieappmad24.screens.WatchlistScreen
 
-
 @Composable
-fun Navigation(movies: List<Movie>) {
-    val navController = rememberNavController()
+fun Navigation() {
+    val navController = rememberNavController() // create a NavController instance
 
-    NavHost(
-        // NavController -> to handle all navigation actions
-        navController = navController,
-        startDestination = Screen.HomeScreen.route
-    ) {
-        composable(Screen.HomeScreen.route) {
+    NavHost(navController = navController, // pass the NavController to NavHost
+        startDestination = Screen.HomeScreen.route) {  // pass a start destination
+        composable(route = Screen.HomeScreen.route){   // route with name "homescreen" navigates to HomeScreen composable
             HomeScreen(navController = navController)
         }
-        // Defining the "Movie details" screen
+
         composable(
             route = Screen.DetailScreen.route,
-            arguments = listOf(navArgument(name = "movieId") { type = NavType.StringType })
+            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
         ) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getString("movieId")
-            movieId?.let { id ->
-                val movie = movies.find { it.id == id }
-                movie?.let {
-                    DetailScreen(navController = navController, movieId = id)
-                }
-            }
+            DetailScreen(navController = navController, movieId = backStackEntry.arguments?.getString(
+                DETAIL_ARGUMENT_KEY))
         }
-        // Defining the "Watchlist" screen
-        composable(Screen.WatchlistScreen.route)
-        {
-            WatchlistScreen( navController = navController)
+
+        composable(route = Screen.WatchlistScreen.route){
+            WatchlistScreen(navController = navController)
         }
     }
 }
